@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap');
+
+
+.container {
+   /* display: block;
+    background-color: aqua;
+    text-align: center;*/
+
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    margin: 0 auto;
+    font-family: 'Montserrat', sans-serif;
+
+  }
+
+.header {
+    text-align: center;
+  /* background-color: blueviolet;*/
+}  
+
+.text_header{
+  font-size: 24;
+}
+
+.forms{
+   /* width: 60%;*/
+    margin-top: 15px;
+
+    align-items: center;
+   /* background-color: azure;*/
+}
+  
+  .block1 {
+    display: flex;
+  }
+  
+  .radiob {
+    flex-grow: 1;
+    padding: 10px;
+  }
+  
+  .form-check {
+    display: flex;
+   /* align-items: center;
+    margin-right: 20px;*/
+  }
+
+  .input-container {
+    position: relative;
+    /*padding-bottom: 10px;*/
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"] {
+    height: 48px;
+    width: 100%;
+    border: 1px solid #c0c0c0;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 16px;
+  }
+
+  textarea{
+    height: 80px;
+    width: 100%;
+    border: 1px solid #c0c0c0;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 16px;
+  }
+
+  textarea:focus {
+    outline: none;
+    border: 2px solid rgb(11, 11, 45);
+  }
+  
+  textarea:focus + .label .text, :not(input[value=""]) + .label .text {
+    font-size: 12px;
+    transform: translate(0, -150%);
+    background-color: white;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  
+  textarea:focus + .label .text {
+    color: rgb(11, 11, 45);
+  }
+  
+  .label {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 14px;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+  }
+  
+  input, .label .text ,textarea {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+  }
+  
+  .label .text {
+    transition: all 0.15s ease-out;
+    color: grey;
+  }
+  
+  input:focus {
+    outline: none;
+    border: 2px solid rgb(11, 11, 45);
+  }
+  
+  input:focus + .label .text, :not(input[value=""]) + .label .text {
+    font-size: 12px;
+    transform: translate(0, -150%);
+    background-color: white;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  
+  input:focus + .label .text {
+    color: rgb(11, 11, 45);
+  }
+
+  .chack {
+    display: flex;
+  }
+  
+  .form-check {
+    flex-grow: 1;
+    padding: 15px;
+  }
+  
