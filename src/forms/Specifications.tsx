@@ -28,7 +28,7 @@ const validationSchema = Yup.object({
   checkS: Yup.boolean(),
   comments: Yup.string().max(500, 'Максимальна довжина поля - 500 символів'),
   validPersonal: Yup.boolean().oneOf([true], 'Згода на обробку персональних даних обовязкова'),
-  
+  isRecaptchaVerified: Yup.string().required("Будь ласка, пройдіть перевірку reCAPTCHA"),
 })
 
 
@@ -57,6 +57,7 @@ const Specifications = () => {
       generalPlan:null,       /* 11| Генплан об'єкта в маштабі 1:500*/
       dogGeneral:null,        /* 12| Договір генпідряду на будівництво*/
       validPersonal:false,
+      isRecaptchaVerified: "",
     },
     validationSchema,
     onSubmit: (values) => {
@@ -142,25 +143,26 @@ const Specifications = () => {
 
   const [visibleRez, setVisibleRez] = useState(false);
   const [mesRez, setMesRez] = useState('');
-  const [isRecaptchaVerified, setRecaptchaVerified] = useState(false);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalIsOpen1, setModalIsOpen1] = useState(false);
+  /*const [isRecaptchaVerified, setRecaptchaVerified] = useState(false);*/
+  const [modalIsPersonal, setModalIsPersonal] = useState(false);
+  const [modalIsPrice, setModalIsPrice] = useState(false);
 
+  Modal.setAppElement("#root");
 
-  const openModal = () => {
-    setModalIsOpen(true);
+  const openModalPersonal = () => {
+    setModalIsPersonal(true);
   };
 
-  const closeModal = () => {
-    setModalIsOpen(false);
+  const closeModalPersonal = () => {
+    setModalIsPersonal(false);
   };
 
-  const openModal1 = () => {
-    setModalIsOpen1(true);
+  const openModalPrice = () => {
+    setModalIsPrice(true);
   };
 
-  const closeModal1 = () => {
-    setModalIsOpen1(false);
+  const closeModalPrice = () => {
+    setModalIsPrice(false);
   };
 
   const customStyles = {
@@ -174,11 +176,6 @@ const Specifications = () => {
       transform: 'translate(-50%, -50%)',
     },
   };
-
-  const handleRecaptchaChange = (response:any) => {
-    setRecaptchaVerified(true);
-  };
-
 
   const handleTechnicalPassptor = (e: React.ChangeEvent<HTMLInputElement>) => {
     const maxSize = 15 * 1024 * 1024;
@@ -761,10 +758,16 @@ return (
       </div>
     </>:<></>}
 
-    <div className='mb-4'><button onClick={openModal1} className='text-blue-500' >Інформацію про вартість послуг</button></div>
+    <div className='mb-4'><button onClick={openModalPrice} className='text-blue-500' >Інформацію про вартість послуг</button></div>
 
     <div className="mb-2">
-    <ReCAPTCHA sitekey="6LfrEB4mAAAAAD0ii0VUy2WiMmMVzBauq-PiM8qP" onChange={handleRecaptchaChange} />
+    <ReCAPTCHA 
+    sitekey="6LetIx4mAAAAAGnHsRKJO6EOBssu1kNHL6TuKWb3" 
+    onChange={(e) => {
+          formik.setFieldValue("isRecaptchaVerified", e);
+        }} />
+         {formik.touched.isRecaptchaVerified && formik.errors.isRecaptchaVerified && (
+         <div className='text-sm text-red-500'>{formik.errors.isRecaptchaVerified}</div>)}
     </div>
 
     <div className="mb-4">
@@ -777,26 +780,26 @@ return (
               onBlur={formik.handleBlur}
               className="form-checkbox h-5 w-5 text-blue-600"
             />
-            <span className="ml-2">Даю згоду на обробку  <button onClick={openModal} className='text-blue-500'>персональних даних</button></span>
+            <span className="ml-2">Даю згоду на обробку  <button onClick={openModalPersonal} className='text-blue-500'>персональних даних</button></span>
         </div>
         {formik.touched.validPersonal && formik.errors.validPersonal && (
          <div className='text-sm text-red-500'>{formik.errors.validPersonal}</div>)}
     </div>
    
-    <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles} >
+    <Modal isOpen={modalIsPersonal} onRequestClose={closeModalPersonal} style={customStyles} >
       <h2 className="text-xl font-semibold mb-4">ЗГОДА НА ОБРОБКУ ПЕРСОНАЛЬНИХ ДАНИХ</h2>
       <p className="text-gray-700 text-sm">Відповідно до п. 6 ст. 6 та ст. 11 Закону України «Про захист персональних даних», надаю згоду власнику сайту, на обробку, збір, реєстрацію, накопичення, зберігання, зміну, поновлення, використання та поширення, даних, у тому числі конфіденційної інформації про мою адресу.</p>
       <p className="text-gray-700 text-sm">Цим підтверджую що я повідомлений про включення інформації про мене до баз персональних даних з метою їх обробки у електронних базах та ведення їх обліку, а також відомості про мої права, визначені Законом України «Про захист персональних даних» та про осіб, яким мої дані надаються для використання.</p>
       <p className="text-gray-700 mb-4 text-sm">Повідомляємо, що надані Вами дані, включені до бази персональних даних, власником якої є МКП “Хмельницькводоканал” з метою їх обробки, для ведення обліку в межах, передбачених законом.</p>
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 text-sm rounded focus:outline-none focus:shadow-outline"
-        onClick={closeModal}
+        onClick={closeModalPersonal}
       >
         Закрити
       </button>
     </Modal>
 
-    <Modal isOpen={modalIsOpen1} onRequestClose={closeModal1} style={customStyles} >
+    <Modal isOpen={modalIsPrice} onRequestClose={closeModalPrice} style={customStyles} >
       <h2 className="text-2xl font-semibold mb-4">Інформацію про вартість послуг</h2>
       <table className="min-w-full divide-y divide-gray-200 mt-4 mb-4">
       <thead className="bg-gray-50">
@@ -842,7 +845,7 @@ return (
     </table>
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-2 text-sm rounded focus:outline-none focus:shadow-outline"
-        onClick={closeModal1}
+        onClick={closeModalPrice}
       >
         Закрити
       </button>
@@ -852,7 +855,6 @@ return (
         <button
           type="submit"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          disabled={!isRecaptchaVerified}
         >
         Надіслати
         </button>
