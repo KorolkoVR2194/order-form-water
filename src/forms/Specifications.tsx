@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import InputMask from 'react-input-mask';
 import '../styles/specific.css'
 import ReCAPTCHA from "react-google-recaptcha";
+import axios from 'axios'; 
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -110,7 +111,29 @@ const Specifications = () => {
         formData.append('dogGeneral', formik.values.dogGeneral);
       }
 
-      fetch('https://service.water.km.ua/Specifications/specifications.php', {
+
+      axios.post('https://service.water.km.ua/Specifications/specifications.php', formData)
+      .then(response => {
+        console.log(response.data);
+
+        if (response.data.success===1){
+          setVisibleRez(true);
+          setMesRez('Заявка відправлена успішно. На вашу електрону адресу відправлено посилання для перегляду статусу заявки.');
+        } else {
+          setVisibleRez(true);
+          setMesRez('Виникла помилка при відправлені заявки. Спробуйте пізніше. Або зверніться до даміністратора Тел. 78-75-66');
+        }
+    
+      })
+      .catch(error => {
+        console.error(error);
+
+        setVisibleRez(true);
+        setMesRez('Виникла помилка при відправлені заявки. Спробуйте пізніше. Або зверніться до даміністратора Тел. 78-75-66');
+      });
+
+
+    /*  fetch('https://service.water.km.ua/Specifications/specifications.php', {
         method: 'POST',
         body: formData,
       })
@@ -124,7 +147,7 @@ const Specifications = () => {
         })
         .catch((error) => {
           console.error('Помилка під час відправлення запиту', error);
-        });
+        });*/
 
 
     },
@@ -135,8 +158,13 @@ const Specifications = () => {
     document.title = 'Заявка на виготовлення технічних умов';
   }, []);
 
+  const [visibleRez, setVisibleRez] = useState(false);
+  const [mesRez, setMesRez] = useState('');
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalIsOpen1, setModalIsOpen1] = useState(false);
+
+
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -839,6 +867,11 @@ return (
         Надіслати
         </button>
       </div>
+
+      {visibleRez?<div className='font-sm text-gren-500 text-center'>{mesRez}</div>:<></>}
+
+
+
   </form>
 )
 }
