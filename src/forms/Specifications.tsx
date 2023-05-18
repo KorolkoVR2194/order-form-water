@@ -118,10 +118,10 @@ const Specifications = () => {
 
         if (response.data.success===1){
           setVisibleRez(true);
-          setMesRez('Заявка відправлена успішно. На вашу електрону адресу відправлено посилання для перегляду статусу заявки.');
+          setMesRez('Заявка відправлена успішно.');
         } else {
           setVisibleRez(true);
-          setMesRez('Виникла помилка при відправлені заявки. Спробуйте пізніше. Або зверніться до даміністратора Тел. 78-75-66');
+          setMesRez('Виникла помилка при відправлені заявки. Спробуйте пізніше. Або зверніться за тел. 78-75-60');
         }
     
       })
@@ -129,26 +129,8 @@ const Specifications = () => {
         console.error(error);
 
         setVisibleRez(true);
-        setMesRez('Виникла помилка при відправлені заявки. Спробуйте пізніше. Або зверніться до даміністратора Тел. 78-75-66');
+        setMesRez('Виникла помилка при відправлені заявки. Спробуйте пізніше. Або зверніться за тел. 78-75-60');
       });
-
-
-    /*  fetch('https://service.water.km.ua/Specifications/specifications.php', {
-        method: 'POST',
-        body: formData,
-      })
-        .then((response) => {
-          if (response.ok) {
-            console.log('Файл успішно завантажено');
-            console.log(response);
-          } else {
-            console.error('Помилка під час завантаження файлу');
-          }
-        })
-        .catch((error) => {
-          console.error('Помилка під час відправлення запиту', error);
-        });*/
-
 
     },
   });
@@ -160,7 +142,7 @@ const Specifications = () => {
 
   const [visibleRez, setVisibleRez] = useState(false);
   const [mesRez, setMesRez] = useState('');
-
+  const [isRecaptchaVerified, setRecaptchaVerified] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalIsOpen1, setModalIsOpen1] = useState(false);
 
@@ -192,6 +174,11 @@ const Specifications = () => {
       transform: 'translate(-50%, -50%)',
     },
   };
+
+  const handleRecaptchaChange = (response:any) => {
+    setRecaptchaVerified(true);
+  };
+
 
   const handleTechnicalPassptor = (e: React.ChangeEvent<HTMLInputElement>) => {
     const maxSize = 15 * 1024 * 1024;
@@ -774,7 +761,11 @@ return (
       </div>
     </>:<></>}
 
-    <div className='mb-4'><button onClick={openModal1} className='text-blue-500' >Інформацію про вартість наших послуг</button></div>
+    <div className='mb-4'><button onClick={openModal1} className='text-blue-500' >Інформацію про вартість послуг</button></div>
+
+    <div className="mb-2">
+    <ReCAPTCHA sitekey="6LfrEB4mAAAAAD0ii0VUy2WiMmMVzBauq-PiM8qP" onChange={handleRecaptchaChange} />
+    </div>
 
     <div className="mb-4">
         <div className="flex items-center">
@@ -793,12 +784,12 @@ return (
     </div>
    
     <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles} >
-      <h2 className="text-2xl font-semibold mb-4">ЗГОДА НА ОБРОБКУ ПЕРСОНАЛЬНИХ ДАНИХ</h2>
-      <p className="text-gray-700">Відповідно до п. 6 ст. 6 та ст. 11 Закону України «Про захист персональних даних», надаю згоду власнику сайту, на обробку, збір, реєстрацію, накопичення, зберігання, зміну, поновлення, використання та поширення, даних, у тому числі конфіденційної інформації про мою адресу.</p>
-      <p className="text-gray-700">Цим підтверджую що я повідомлений про включення інформації про мене до баз персональних даних з метою їх обробки у електронних базах та ведення їх обліку, а також відомості про мої права, визначені Законом України «Про захист персональних даних» та про осіб, яким мої дані надаються для використання.</p>
-      <p className="text-gray-700 mb-4">Повідомляємо, що надані Вами дані, включені до бази персональних даних, власником якої є МКП “Хмельницькводоканал” з метою їх обробки, для ведення обліку в межах, передбачених законом.</p>
+      <h2 className="text-xl font-semibold mb-4">ЗГОДА НА ОБРОБКУ ПЕРСОНАЛЬНИХ ДАНИХ</h2>
+      <p className="text-gray-700 text-sm">Відповідно до п. 6 ст. 6 та ст. 11 Закону України «Про захист персональних даних», надаю згоду власнику сайту, на обробку, збір, реєстрацію, накопичення, зберігання, зміну, поновлення, використання та поширення, даних, у тому числі конфіденційної інформації про мою адресу.</p>
+      <p className="text-gray-700 text-sm">Цим підтверджую що я повідомлений про включення інформації про мене до баз персональних даних з метою їх обробки у електронних базах та ведення їх обліку, а також відомості про мої права, визначені Законом України «Про захист персональних даних» та про осіб, яким мої дані надаються для використання.</p>
+      <p className="text-gray-700 mb-4 text-sm">Повідомляємо, що надані Вами дані, включені до бази персональних даних, власником якої є МКП “Хмельницькводоканал” з метою їх обробки, для ведення обліку в межах, передбачених законом.</p>
       <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 text-sm rounded focus:outline-none focus:shadow-outline"
         onClick={closeModal}
       >
         Закрити
@@ -806,63 +797,62 @@ return (
     </Modal>
 
     <Modal isOpen={modalIsOpen1} onRequestClose={closeModal1} style={customStyles} >
-      <h2 className="text-2xl font-semibold mb-4">Інформацію про вартість наших послуг</h2>
+      <h2 className="text-2xl font-semibold mb-4">Інформацію про вартість послуг</h2>
       <table className="min-w-full divide-y divide-gray-200 mt-4 mb-4">
       <thead className="bg-gray-50">
         <tr>
-          <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th className="py-3 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
             Назва
           </th>
-          <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th className="py-3 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
             Ціна
           </th>
         </tr>
       </thead>
       <tbody className="bg-white divide-y divide-gray-200">
         <tr>
-          <td className="py-4 px-6 whitespace-nowrap">Приватний сектор (В)</td>
-          <td className="py-4 px-6 whitespace-nowrap">1164.00</td>
+          <td className="py-2 px-4 text-sm whitespace-nowrap">Приватний сектор (В)</td>
+          <td className="py-2 px-4 text-sm whitespace-nowrap">1164.00</td>
         </tr>
         <tr>
-          <td className="py-4 px-6 whitespace-nowrap">Приватний сектор (ВіК)</td>
-          <td className="py-4 px-6 whitespace-nowrap">2328.00</td>
+          <td className="py-2 px-4 text-sm whitespace-nowrap">Приватний сектор (ВіК)</td>
+          <td className="py-2 px-4 text-sm whitespace-nowrap">2328.00</td>
         </tr>
         <tr>
-          <td className="py-4 px-6 whitespace-nowrap">Внутрішньо будинкові мережі</td>
-          <td className="py-4 px-6 whitespace-nowrap">1647.00</td>
+          <td className="py-2 px-4 text-sm whitespace-nowrap">Внутрішньо будинкові мережі</td>
+          <td className="py-2 px-4 text-sm whitespace-nowrap">1647.20</td>
         </tr>
         <tr>
-          <td className="py-4 px-6 whitespace-nowrap">до 3 м/добу (вода)</td>
-          <td className="py-4 px-6 whitespace-nowrap">2679.00</td>
+          <td className="py-2 px-4 text-sm whitespace-nowrap">до 3 м/добу (вода)</td>
+          <td className="py-2 px-4 text-sm whitespace-nowrap">2679.50</td>
         </tr>
         <tr>
-          <td className="py-4 px-6 whitespace-nowrap">до 3 м/добу (ВіК)</td>
-          <td className="py-4 px-6 whitespace-nowrap">5358.00</td>
+          <td className="py-2 px-4 text-sm whitespace-nowrap">до 3 м/добу (ВіК)</td>
+          <td className="py-2 px-4 text-sm whitespace-nowrap">5358.90</td>
         </tr>
         <tr>
-          <td className="py-4 px-6 whitespace-nowrap">більше 3 м/добу (В)</td>
-          <td className="py-4 px-6 whitespace-nowrap">3816.00</td>
+          <td className="py-2 px-4 text-sm whitespace-nowrap">більше 3 м/добу (В)</td>
+          <td className="py-2 px-4 text-sm whitespace-nowrap">3816.10</td>
         </tr>
         <tr>
-          <td className="py-4 px-6 whitespace-nowrap">більше 3 м/добу (ВіК)</td>
-          <td className="py-4 px-6 whitespace-nowrap">7632.00</td>
+          <td className="py-2 px-4 text-sm whitespace-nowrap">більше 3 м/добу (ВіК)</td>
+          <td className="py-2 px-4 text-sm whitespace-nowrap">7632.30</td>
         </tr>
       </tbody>
     </table>
       <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-2 text-sm rounded focus:outline-none focus:shadow-outline"
         onClick={closeModal1}
       >
         Закрити
       </button>
     </Modal>
-
-
-
+   
       <div className="flex justify-end tm-4">
         <button
           type="submit"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          disabled={!isRecaptchaVerified}
         >
         Надіслати
         </button>
