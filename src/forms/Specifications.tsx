@@ -56,6 +56,7 @@ const Specifications = () => {
       urbanPlanning:null,     /* 10| Містобудівні умови та обмеження */
       generalPlan:null,       /* 11| Генплан об'єкта в маштабі 1:500*/
       dogGeneral:null,        /* 12| Договір генпідряду на будівництво*/
+      statement:null,          /*13 | Звява */
       validPersonal:false,
       isRecaptchaVerified: "",
     },
@@ -112,6 +113,9 @@ const Specifications = () => {
         formData.append('dogGeneral', formik.values.dogGeneral);
       }
 
+      if (formik.values.statement) {
+        formData.append('statement', formik.values.statement);
+      }
 
       axios.post('https://service.water.km.ua/Specifications/specifications.php', formData)
       .then(response => {
@@ -176,6 +180,20 @@ const Specifications = () => {
       transform: 'translate(-50%, -50%)',
     },
   };
+
+
+  const handleStatement = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const maxSize = 15 * 1024 * 1024;
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      if (file.size <= maxSize) {
+        formik.setFieldValue('statement', file);
+      } else {
+        alert('Розмір файлу перевищує доступний ліміт (15 МБ).');
+      }
+    }
+  };
+
 
   const handleTechnicalPassptor = (e: React.ChangeEvent<HTMLInputElement>) => {
     const maxSize = 15 * 1024 * 1024;
@@ -374,7 +392,7 @@ return (
          <div className='text-sm text-red-500'>{formik.errors.selectedOption}</div>)}
       </div>
       <div className="mb-4">
-        <label className="block  mb-2" htmlFor="name">ПІП (Назва падприємства, установи чи організації):</label>
+        <label className="block  mb-2" htmlFor="name">ПІП (Назва підприємства, установи чи організації):</label>
         <input
           type="text"
           id="name"
@@ -488,7 +506,7 @@ return (
          <div className='text-sm'>{formik.errors.comments}</div>)}
       </div>
       <div className='text-sm mb-4'>
-        Отримати технічні умови Ви зможете за адресою: вул. Водопровідна, 75 (1 поверх 4 вікно МКП "Хмельницькводоканал" Вівторок,Четвер з 8:00 до 12:00)
+        Отримати технічні умови можете за адресою: вул. Водопровідна, 75 (1 поверх 4 вікно МКП "Хмельницькводоканал" Вівторок,Четвер з 8:00 до 12:00)
       </div>
       
       {formik.values.selectedOption!==''?<div className='font-semibold'>Перелік необхідних документів:</div>:<></>}
@@ -497,6 +515,27 @@ return (
 
 
       {formik.values.selectedOption==='type1'?<>
+
+      <div className="mb-2">
+        <label className="block mb-1 text-sm" htmlFor="statement">Заява заповнена та підписана:</label>
+        <a className='block mb-2 text-sm text-blue-500' target="_blank" rel="noopener noreferrer" href="https://docs.google.com/document/d/1LlN0izvJ_OMfR3j04n3fuyLCKijvb_Nb/edit?usp=sharing&ouid=110546765641316117599&rtpof=true&sd=true" download>Бланк заяви</a>
+  
+        <input
+              type="file"
+              id="statement"
+              name="statement"
+              accept="image/*,.pdf"
+              onChange={handleStatement}
+             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
+            />
+             {formik.touched.statement && formik.errors.statement && (
+              <div className='text-sm text-red-500'>{formik.errors.statement}</div>
+              )}
+        
+      </div>
+
+
+
       <div className="mb-2">
         <label className="block mb-2 text-sm" htmlFor="technicalPassptor">Технічний паспорт на будинок:</label>
         <input
@@ -545,6 +584,26 @@ return (
               />
       </div></>
       :formik.values.selectedOption==='type2'?<>
+
+      <div className="mb-2">
+        <label className="block mb-1 text-sm" htmlFor="statement">Заява заповнена та підписана:</label>
+        <a className='block mb-2 text-sm text-blue-500' target="_blank" rel="noopener noreferrer" href="https://docs.google.com/document/d/1Owla07OCoEJ6mP1DXR_38bclfVPACZ4R/edit?usp=sharing&ouid=110546765641316117599&rtpof=true&sd=true" download>Бланк заяви</a>
+  
+        <input
+              type="file"
+              id="statement"
+              name="statement"
+              accept="image/*,.pdf"
+              onChange={handleStatement}
+             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
+            />
+             {formik.touched.statement && formik.errors.statement && (
+              <div className='text-sm text-red-500'>{formik.errors.statement}</div>
+              )}
+        
+      </div>
+
+
       <div className="mb-2">
         <label className="block mb-2 text-sm" htmlFor="stateRegistration">Копія свідоцтва про державну реєстрацію підприємства, організації, установи, фізичної особи-підприємця:</label>
         <input
@@ -601,6 +660,26 @@ return (
           />
       </div>
     </>:formik.values.selectedOption==='type3'?<>
+      
+    <div className="mb-2">
+        <label className="block mb-1 text-sm" htmlFor="statement">Заява заповнена та підписана:</label>
+        <a className='block mb-2 text-sm text-blue-500' target="_blank" rel="noopener noreferrer" href="https://docs.google.com/document/d/1Owla07OCoEJ6mP1DXR_38bclfVPACZ4R/edit?usp=sharing&ouid=110546765641316117599&rtpof=true&sd=true" download>Бланк заяви</a>
+  
+        <input
+              type="file"
+              id="statement"
+              name="statement"
+              accept="image/*,.pdf"
+              onChange={handleStatement}
+             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
+            />
+             {formik.touched.statement && formik.errors.statement && (
+              <div className='text-sm text-red-500'>{formik.errors.statement}</div>
+              )}
+        
+      </div>
+      
+      
       <div className="mb-2">
         <label className="block mb-2 text-sm" htmlFor="stateRegistration">Копія свідоцтва про державну реєстрацію підприємства, організації, установи, фізичної особи-підприємця:</label>
         <input
@@ -690,6 +769,26 @@ return (
           />
       </div>
     </>:formik.values.selectedOption==='type4'?<>
+      
+      <div className="mb-2">
+        <label className="block mb-1 text-sm" htmlFor="statement">Заява заповнена та підписана:</label>
+        <a className='block mb-2 text-sm text-blue-500' target="_blank" rel="noopener noreferrer" href="https://docs.google.com/document/d/1Owla07OCoEJ6mP1DXR_38bclfVPACZ4R/edit?usp=sharing&ouid=110546765641316117599&rtpof=true&sd=true" download>Бланк заяви</a>
+  
+        <input
+              type="file"
+              id="statement"
+              name="statement"
+              accept="image/*,.pdf"
+              onChange={handleStatement}
+             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
+            />
+             {formik.touched.statement && formik.errors.statement && (
+              <div className='text-sm text-red-500'>{formik.errors.statement}</div>
+              )}
+        
+      </div>
+      
+      
       <div className="mb-2">
         <label className="block mb-2 text-sm" htmlFor="stateRegistration">Копія свідоцтва про державну реєстрацію підприємства, організації, установи, фізичної особи-підприємця:</label>
         <input

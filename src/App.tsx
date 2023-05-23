@@ -18,6 +18,21 @@ function Home() {
               <Link to="/specifications" className='text-white font-semibold' >Виготовлення технічних умов</Link>
             </li>
           </ul>
+          <ul className='text-center '>
+            <li className='py-3 my-4 bg-sky-500'>
+              <Link to="/numberregistered" className='text-white font-semibold' >Зміна кількості прописаних осіб (фізичні особи)</Link>
+            </li>
+          </ul>
+          <ul className='text-center '>
+            <li className='py-3 my-4 bg-sky-500'>
+              <Link to="/verificationcounter" className='text-white font-semibold' >Заявка на повірку лічильників</Link>
+            </li>
+          </ul>
+          <ul className='text-center '>
+            <li className='py-3 my-4 bg-sky-500'>
+              <Link to="/changeowner" className='text-white font-semibold' >Зміна власника (фізичні особи)</Link>
+            </li>
+          </ul>
         </nav>
       <Outlet />
     </div>
@@ -25,3 +40,5 @@ function Home() {
 }
 
 export default Home;
+
+

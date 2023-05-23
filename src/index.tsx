@@ -7,7 +7,8 @@ import Projects from './forms/Projects';
 import VerificationCounter from './forms/VerificationCounter';
 import WorksTransport from './forms/WorksTransport';
 import NoPage from './forms/NoPage';
-
+import NumberRegistered from './forms/NumberRegistered'
+import ChangeOwner from './forms/ChangeOwner';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -18,9 +19,11 @@ root.render(
         <Route >
           <Route path="/" element={<Home />} />
           <Route path="specifications" element={<Specifications />} />
+          <Route path="numberregistered" element={<NumberRegistered />} />
           <Route path="projects" element={<Projects />} />
           <Route path="verificationcounter" element={<VerificationCounter />} />
           <Route path="workstransport" element={<WorksTransport />} />
+          <Route path="changeowner" element={<ChangeOwner />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>

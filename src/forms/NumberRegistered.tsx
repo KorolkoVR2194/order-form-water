@@ -20,17 +20,13 @@ const validationSchema = Yup.object({
     address: Yup.string()
       .max(80, 'Максимальна довжина поля - 80 символів')
       .required("Поле адреса є обов'язковим"),
-    id_abon: Yup.string()
-      .max(16, 'Максимальна довжина поля - 16 символів')
-      .required("Поле особовий рахунок є обов'язковим"),
-    kil_counter: Yup.string()
-      .required("Поле кількість лічильників є обов'язковим"),
     comments: Yup.string().max(500, 'Максимальна довжина поля - 500 символів'),
     validPersonal: Yup.boolean().oneOf([true], 'Згода на обробку персональних даних обовязкова'),
     isRecaptchaVerified: Yup.string().required("Будь ласка, пройдіть перевірку reCAPTCHA"),
   })
 
-const VerificationCounter = () => {
+
+const NumberRegistered = () =>{
 
 
     const formik = useFormik({
@@ -40,8 +36,7 @@ const VerificationCounter = () => {
           email: "",
           address: "",
           comments: "",
-          id_abon: "",
-          kil_counter: "",
+          familyMembers:null,   /* 1 |Довідка про склад сімї */
           validPersonal:false,
           isRecaptchaVerified: "",
         },
@@ -55,13 +50,10 @@ const VerificationCounter = () => {
           formData.append('email', formik.values.email);
           formData.append('address', formik.values.address);
           formData.append('comments', formik.values.comments);
-
-          formData.append('id_abon', formik.values.id_abon);
-          formData.append('kil_counter', formik.values.kil_counter);
-
-          formData.append('type', '3');
-        
-
+          formData.append('type', '1');
+          if (formik.values.familyMembers) {
+          formData.append('familyMembers', formik.values.familyMembers);
+          }
         
     
           axios.post('https://service.water.km.ua/Specifications/rg-service.php', formData)
@@ -89,14 +81,14 @@ const VerificationCounter = () => {
 
 
       useEffect(() => {
-        document.title = 'Заявка на повірку лічильника';
+        document.title = 'Заявка на зміну кількості прописаних осіб';
       }, []);
 
 
       const [visibleRez, setVisibleRez] = useState(false);
       const [mesRez, setMesRez] = useState('');
       const [modalIsPersonal, setModalIsPersonal] = useState(false);
-      const [modalIsPrice, setModalIsPrice] = useState(false);
+
     
       Modal.setAppElement("#root");
     
@@ -108,14 +100,8 @@ const VerificationCounter = () => {
         setModalIsPersonal(false);
       };
     
-      const openModalPrice = () => {
-        setModalIsPrice(true);
-      };
     
-      const closeModalPrice = () => {
-        setModalIsPrice(false);
-      };
-
+    
       const customStyles = {
         content: {
           top: '50%',
@@ -127,24 +113,31 @@ const VerificationCounter = () => {
           transform: 'translate(-50%, -50%)',
         },
       };
+    
+    
+      const handleFamilyMembers = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const maxSize = 15 * 1024 * 1024;
+        const file = e.target.files && e.target.files[0];
+        if (file) {
+          if (file.size <= maxSize) {
+            formik.setFieldValue('familyMembers', file);
+          } else {
+            alert('Розмір файлу перевищує доступний ліміт (15 МБ).');
+          }
+        }
+      };
+    
 
 
 
 
-
-      
-
-
-
-return (
-   <>
-   <form onSubmit={formik.handleSubmit} className="max-w-lg mx-auto my-4 p-4 bg-white shadow-lg rounded" encType="multipart/form-data">
-      <h3 className="text-xl font-semibold mb-2 text-center">Заявка на повірку лічильників</h3>
-      <div className='mb-4 text-center text-sm'>(послуга включає в себе розпломбування, демонтаж, монтаж, повірку та пломбування лічильника)</div>
+ return (<>
+ <form onSubmit={formik.handleSubmit} className="max-w-lg mx-auto my-4 p-4 bg-white shadow-lg rounded" encType="multipart/form-data">
+      <h3 className="text-xl font-semibold mb-2 text-center">Заявка на зміну кількості прописаних осіб</h3>
       <div className='mb-4 text-center text-sm'>Для того, щоб замовити послугу, заповніть, будь ласка, онлайн-заявку</div>
 
       <div className="mb-4">
-        <label className="block  mb-2" htmlFor="name">ПІП (Назва підприємства, установи чи організації):</label>
+        <label className="block  mb-2" htmlFor="name">Прізвище Ім'я По батькові:</label>
         <input
           type="text"
           id="name"
@@ -212,42 +205,6 @@ return (
         {formik.touched.address && formik.errors.address && (
           <div className='text-sm text-red-500'>{formik.errors.address}</div>)}
       </div>
-
-
-      <div className="mb-4">
-        <label className="block mb-2" htmlFor="id_abon">Особистий рахунок (Номер договору):</label>
-        <input
-          type="text"
-          id="id_abon"
-          name="id_abon"
-          value={formik.values.id_abon}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
-        {formik.touched.id_abon && formik.errors.id_abon && (
-          <div className='text-sm text-red-500'>{formik.errors.id_abon}</div>)}
-      </div>
-
-
-      <div className="mb-4">
-        <label className="block mb-2" htmlFor="kil_counter">Кількість лічильників :</label>
-        <input
-          type="text"
-          id="kil_counter"
-          name="kil_counter"
-          value={formik.values.kil_counter}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
-        {formik.touched.kil_counter && formik.errors.kil_counter && (
-          <div className='text-sm text-red-500'>{formik.errors.kil_counter}</div>)}
-      </div>
-
-
-
-
  
       <div className="mb-2">
         <textarea
@@ -266,7 +223,20 @@ return (
 
 
             
-      <div className='mb-4'><button onClick={openModalPrice} className='text-blue-500' >Інформацію про вартість послуг</button></div>
+      <div className="mb-2">
+        <label className="block mb-2 text-sm" htmlFor="familyMembers">Довідка про склад сімї (При наявності):</label>
+        <input
+              type="file"
+              id="familyMembers"
+              name="familyMembers"
+              accept="image/*,.pdf"
+              onChange={handleFamilyMembers}
+             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
+            />
+             {formik.touched.familyMembers && formik.errors.familyMembers && (
+              <div className='text-sm text-red-500'>{formik.errors.familyMembers}</div>
+              )}
+      </div>
 
 
 
@@ -312,47 +282,6 @@ return (
       </button>
     </Modal>
 
-    <Modal isOpen={modalIsPrice} onRequestClose={closeModalPrice} style={customStyles} >
-      <h2 className="text-2xl font-semibold mb-4">ВАРТІСТЬ ПОВІРКИ ЛІЧИЛЬНИКІВ КРИЛЬЧАСТИХ ДІАМЕТРОМ 15 ММ</h2>
-      <table className="min-w-full divide-y divide-gray-200 mt-4 mb-4">
-      <thead className="bg-gray-50">
-        <tr>
-          <th className="py-3 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-            Назва
-          </th>
-          <th className="py-3 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-            Ціна
-          </th>
-        </tr>
-      </thead>
-      <tbody className="bg-white divide-y divide-gray-200">
-        <tr>
-          <td className="py-2 px-4 text-sm whitespace-nowrap">Роботи по заміні лічильника марки КВ-1,5 і ЛК-1,5 з обмінного фонду лічильників, які пройшли державну періодичну повірку</td>
-          <td className="py-2 px-4 text-sm whitespace-nowrap">278,50 грн</td>
-        </tr>
-        <tr>
-          <td className="py-2 px-4 text-sm whitespace-nowrap">Роботи по зняттю, повірці і встановленню лічильника абонента</td>
-          <td className="py-2 px-4 text-sm whitespace-nowrap">434,50 грн</td>
-        </tr>
-        <tr>
-          <td className="py-2 px-4 text-sm whitespace-nowrap">Роботи по повірці лічильника, знятого абонентом</td>
-          <td className="py-2 px-4 text-sm whitespace-nowrap">128,50 грн</td>
-        </tr>
-        <tr>
-          <td className="py-2 px-4 text-sm whitespace-nowrap">Заміна старого лічильника абонента на новий лічильник придбаний абонентом</td>
-          <td className="py-2 px-4 text-sm whitespace-nowrap">150,10 грн</td>
-        </tr>
-      </tbody>
-    </table>
-    <div>Примітка: Вартість послуг вказана без послуг банку.</div>
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-2 text-sm rounded focus:outline-none focus:shadow-outline"
-        onClick={closeModalPrice}
-      >
-        Закрити
-      </button>
-    </Modal>
-
     <div className="flex justify-end tm-4">
         <button
           type="submit"
@@ -363,11 +292,9 @@ return (
       </div>
       {visibleRez?<div className='font-sm text-gren-500 text-center'>{mesRez}</div>:<></>}
     </form>
-   </>
-)
 
 
-
+ </>)
 }
 
-export default VerificationCounter;
+export default NumberRegistered;
