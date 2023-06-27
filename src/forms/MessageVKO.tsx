@@ -26,7 +26,7 @@ const validationSchema = Yup.object({
   })
 
 
-const ChangeOwner = () =>{
+const MessageVKO = () =>{
 
 
     const formik = useFormik({
@@ -36,11 +36,6 @@ const ChangeOwner = () =>{
           email: "",
           address: "",
           comments: "",
-          statement:null,   /* 1 |Заява приєднання */
-          technicalPassport:null, /*2| Технеічний паспорт(титульна сторінка) */
-          ownership:null, /*3| Право власності */
-          familyMembers:null, /*Довідка про склад сімї */
-          materialRights:null, /* Витяг з держ реємтру  */
           validPersonal:false,
           isRecaptchaVerified: "",
         },
@@ -54,27 +49,8 @@ const ChangeOwner = () =>{
           formData.append('email', formik.values.email);
           formData.append('address', formik.values.address);
           formData.append('comments', formik.values.comments);
-          formData.append('type', '2');
+          formData.append('type', '4');
 
-          if (formik.values.familyMembers) {
-            formData.append('familyMembers', formik.values.familyMembers);
-          }
-
-          if (formik.values.statement) {
-            formData.append('statement', formik.values.statement);
-          }
-
-          if (formik.values.technicalPassport) {
-            formData.append('technicalPassport', formik.values.technicalPassport);
-          }
-
-          if (formik.values.ownership) {
-            formData.append('ownership', formik.values.ownership);
-          }
-
-          if (formik.values.materialRights) {
-            formData.append('materialRights', formik.values.materialRights);
-          }
     
           axios.post('https://service.water.km.ua/Specifications/rg-service.php', formData)
           .then(response => {
@@ -101,7 +77,7 @@ const ChangeOwner = () =>{
 
 
       useEffect(() => {
-        document.title = 'Заявка на зміну кількості прописаних осіб';
+        document.title = 'Повідомлення по роботі вузлів комерційного обліку';
       }, []);
 
 
@@ -134,71 +110,11 @@ const ChangeOwner = () =>{
         },
       };
 
-
-      const handleMaterialRights = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const maxSize = 15 * 1024 * 1024;
-        const file = e.target.files && e.target.files[0];
-        if (file) {
-          if (file.size <= maxSize) {
-            formik.setFieldValue('materialRights', file);
-          } else {
-            alert('Розмір файлу перевищує доступний ліміт (15 МБ).');
-          }
-        }
-      };
-
-      const handleOwnership = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const maxSize = 15 * 1024 * 1024;
-        const file = e.target.files && e.target.files[0];
-        if (file) {
-          if (file.size <= maxSize) {
-            formik.setFieldValue('ownership', file);
-          } else {
-            alert('Розмір файлу перевищує доступний ліміт (15 МБ).');
-          }
-        }
-      };
-
-      const handleTechnicalPassport = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const maxSize = 15 * 1024 * 1024;
-        const file = e.target.files && e.target.files[0];
-        if (file) {
-          if (file.size <= maxSize) {
-            formik.setFieldValue('technicalPassport', file);
-          } else {
-            alert('Розмір файлу перевищує доступний ліміт (15 МБ).');
-          }
-        }
-      };
-
-      const handleStatement = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const maxSize = 15 * 1024 * 1024;
-        const file = e.target.files && e.target.files[0];
-        if (file) {
-          if (file.size <= maxSize) {
-            formik.setFieldValue('statement', file);
-          } else {
-            alert('Розмір файлу перевищує доступний ліміт (15 МБ).');
-          }
-        }
-      };
-    
-      const handleFamilyMembers = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const maxSize = 15 * 1024 * 1024;
-        const file = e.target.files && e.target.files[0];
-        if (file) {
-          if (file.size <= maxSize) {
-            formik.setFieldValue('familyMembers', file);
-          } else {
-            alert('Розмір файлу перевищує доступний ліміт (15 МБ).');
-          }
-        }
-      };
     
 
  return (<>
  <form onSubmit={formik.handleSubmit} className="max-w-lg mx-auto my-4 p-4 bg-white shadow-lg rounded" encType="multipart/form-data">
-      <h3 className="text-xl font-semibold mb-2 text-center">Заявка на зміну власника (фізичні особи)</h3>
+      <h3 className="text-xl font-semibold mb-2 text-center">Повідомлення по роботі Вузлів комерційного обліку</h3>
 
       {visibleRez?<div className='font-sm text-gren-500 text-center'>{mesRez}</div>:<>
 
@@ -278,7 +194,7 @@ const ChangeOwner = () =>{
         <textarea
           id="comments"
           name="comments"
-          placeholder='За необхідності Ви можите залишити коментар з приводу замовлення послуги'
+          placeholder='Текст повідомлення по роботі ВКО.'
          value={formik.values.comments}
          onChange={formik.handleChange}
          onBlur={formik.handleBlur}
@@ -286,87 +202,6 @@ const ChangeOwner = () =>{
         />
          {formik.touched.comments && formik.errors.comments && (
          <div className='text-sm'>{formik.errors.comments}</div>)}
-      </div>
-
-      <div className='font-semibold'>Перелік необхідних документів:</div>
-      <div className='font-sm text-blue-500'>Розмір файлу не має перевищувати (15 МБ):</div>
-
-      <div className="mb-2">
-        <label className="block mb-2 text-sm" htmlFor="statement">Заява-приєднання:</label>
-        <a className='block mb-2 text-sm text-blue-500' target="_blank" rel="noopener noreferrer" href="https://docs.google.com/document/d/1Tst4tuJLQupjBWN3aY_N-LxWfrR5bhjg/edit?usp=sharing&ouid=110546765641316117599&rtpof=true&sd=true" download>Бланк заяви-приєднання</a>
-  
-        <input
-              type="file"
-              id="statement"
-              name="statement"
-              accept=".jpg,.png,.pdf"
-              onChange={handleStatement}
-             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
-            />
-             {formik.touched.statement && formik.errors.statement && (
-              <div className='text-sm text-red-500'>{formik.errors.statement}</div>
-              )}
-      </div>
-
-
-      <div className="mb-2">
-        <label className="block mb-2 text-sm" htmlFor="technicalPassport">Технічний паспорт (титульна сторінка):</label>
-        <input
-              type="file"
-              id="technicalPassport"
-              name="technicalPassport"
-              accept=".jpg,.png,.pdf"
-              onChange={handleTechnicalPassport}
-             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
-            />
-             {formik.touched.technicalPassport && formik.errors.technicalPassport && (
-              <div className='text-sm text-red-500'>{formik.errors.technicalPassport}</div>
-              )}
-      </div>
-
-      <div className="mb-2">
-        <label className="block mb-2 text-sm" htmlFor="ownership">Документ на право власності (договір купівлі-продажу,договір дарування,свідоцтво на право власності):</label>
-        <input
-              type="file"
-              id="ownership"
-              name="ownership"
-              accept=".jpg,.png,.pdf"
-              onChange={handleOwnership}
-             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
-            />
-             {formik.touched.ownership && formik.errors.ownership && (
-              <div className='text-sm text-red-500'>{formik.errors.ownership}</div>
-              )}
-      </div>
-            
-      <div className="mb-2">
-        <label className="block mb-2 text-sm" htmlFor="familyMembers">Довідка про склад сімї:</label>
-        <input
-              type="file"
-              id="familyMembers"
-              name="familyMembers"
-              accept=".jpg,.png,.pdf"
-              onChange={handleFamilyMembers}
-             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
-            />
-             {formik.touched.familyMembers && formik.errors.familyMembers && (
-              <div className='text-sm text-red-500'>{formik.errors.familyMembers}</div>
-              )}
-      </div>
-
-      <div className="mb-2">
-        <label className="block mb-2 text-sm" htmlFor="materialRights">Витяг з державного реєстру речових прав:</label>
-        <input
-              type="file"
-              id="materialRights"
-              name="materialRights"
-              accept=".jpg,.png,.pdf"
-              onChange={handleMaterialRights}
-             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
-            />
-             {formik.touched.materialRights && formik.errors.materialRights && (
-              <div className='text-sm text-red-500'>{formik.errors.materialRights}</div>
-              )}
       </div>
 
 
@@ -428,4 +263,4 @@ const ChangeOwner = () =>{
  </>)
 }
 
-export default ChangeOwner;
+export default MessageVKO;

@@ -7,7 +7,7 @@ import axios from 'axios';
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
+import Loader from '../component/Loader'
 
 const validationSchema = Yup.object({
   selectedOption: Yup.string()
@@ -63,7 +63,7 @@ const Specifications = () => {
     validationSchema,
     onSubmit: (values) => {
       /*alert(JSON.stringify(values, null, 2));*/
-      
+      setIsLoading(true);
       const formData = new FormData();
 
       formData.append('selectedOption', formik.values.selectedOption);
@@ -123,7 +123,7 @@ const Specifications = () => {
 
         if (response.data.success===1){
           setVisibleRez(true);
-          setMesRez('Заявка відправлена успішно.');
+          setMesRez('Заявка відправлена успішно. На електрону адресу відправлено посилання для перегляду статусу заявки.');
         } else {
           setVisibleRez(true);
           setMesRez('Виникла помилка при відправлені заявки. Спробуйте пізніше. Або зверніться за тел. 78-75-60');
@@ -136,7 +136,7 @@ const Specifications = () => {
         setVisibleRez(true);
         setMesRez('Виникла помилка при відправлені заявки. Спробуйте пізніше. Або зверніться за тел. 78-75-60');
       });
-
+      setIsLoading(false); 
     },
   });
 
@@ -150,7 +150,7 @@ const Specifications = () => {
   /*const [isRecaptchaVerified, setRecaptchaVerified] = useState(false);*/
   const [modalIsPersonal, setModalIsPersonal] = useState(false);
   const [modalIsPrice, setModalIsPrice] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   Modal.setAppElement("#root");
 
   const openModalPersonal = () => {
@@ -336,6 +336,9 @@ const handleDogGeneral = (e: React.ChangeEvent<HTMLInputElement>) => {
 return (
   <form onSubmit={formik.handleSubmit} className="max-w-lg mx-auto my-4 p-4 bg-white shadow-lg rounded" encType="multipart/form-data">
       <h3 className="text-xl font-semibold mb-2 text-center">Заявка на виготовлення технічних умов</h3>
+
+      {visibleRez?<div className='font-sm text-gren-500 text-center'>{mesRez}</div>:<>
+
       <div className='mb-1 text-center text-sm'>Для того, щоб замовити послугу, заповніть, будь ласка, онлайн-заявку</div>
       <div className="mb-4">
         <div className='pt-4 flex flex-col'>
@@ -524,7 +527,7 @@ return (
               type="file"
               id="statement"
               name="statement"
-              accept="image/*,.pdf"
+              accept=".jpg,.png,.pdf"
               onChange={handleStatement}
              className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
             />
@@ -542,7 +545,7 @@ return (
               type="file"
               id="technicalPassptor"
               name="technicalPassptor"
-              accept="image/*,.pdf"
+              accept=".jpg,.png,.pdf"
               onChange={handleTechnicalPassptor}
              className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
             />
@@ -556,7 +559,7 @@ return (
             type="file"
             id="landDeed"
             name="landDeed"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handleLandDeed}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
       />
@@ -567,7 +570,7 @@ return (
             type="file"
             id="ownership"
             name="ownership"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handleOwnership}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -578,7 +581,7 @@ return (
             type="file"
             id="permission"
             name="permission"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handlePermission}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
               />
@@ -593,7 +596,7 @@ return (
               type="file"
               id="statement"
               name="statement"
-              accept="image/*,.pdf"
+              accept=".jpg,.png,.pdf"
               onChange={handleStatement}
              className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
             />
@@ -610,7 +613,7 @@ return (
               type="file"
               id="stateRegistration"
               name="stateRegistration"
-              accept="image/*,.pdf"
+              accept=".jpg,.png,.pdf"
               onChange={handleStateRegistration}
               className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
             />
@@ -621,7 +624,7 @@ return (
             type="file"
             id="questionnaire"
             name="questionnaire"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handleQuestionnaire}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -632,7 +635,7 @@ return (
             type="file"
             id="docRooms"
             name="docRooms"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handleDocRooms}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -643,7 +646,7 @@ return (
             type="file"
             id="balancer"
             name="balancer"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handleBalancer}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -654,7 +657,7 @@ return (
             type="file"
             id="passport1"
             name="passport1"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handlePassport}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -669,7 +672,7 @@ return (
               type="file"
               id="statement"
               name="statement"
-              accept="image/*,.pdf"
+              accept=".jpg,.png,.pdf"
               onChange={handleStatement}
              className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
             />
@@ -686,7 +689,7 @@ return (
               type="file"
               id="stateRegistration"
               name="stateRegistration"
-              accept="image/*,.pdf"
+              accept=".jpg,.png,.pdf"
               onChange={handleStateRegistration}
               className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
             />
@@ -697,7 +700,7 @@ return (
             type="file"
             id="questionnaire"
             name="questionnaire"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handleQuestionnaire}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -708,7 +711,7 @@ return (
             type="file"
             id="docRooms"
             name="docRooms"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handleDocRooms}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -719,7 +722,7 @@ return (
             type="file"
             id="landDeed"
             name="landDeed"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handleLandDeed}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -730,7 +733,7 @@ return (
             type="file"
             id="urbanPlanning"
             name="urbanPlanning"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handleUrbanPlanning}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -741,7 +744,7 @@ return (
             type="file"
             id="generalPlan"
             name="generalPlan"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handleGeneralPlan}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -752,7 +755,7 @@ return (
             type="file"
             id="passport1"
             name="passport1"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handlePassport}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -763,7 +766,7 @@ return (
             type="file"
             id="permission"
             name="permission"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handlePermission}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -778,7 +781,7 @@ return (
               type="file"
               id="statement"
               name="statement"
-              accept="image/*,.pdf"
+              accept=".jpg,.png,.pdf"
               onChange={handleStatement}
              className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
             />
@@ -795,7 +798,7 @@ return (
               type="file"
               id="stateRegistration"
               name="stateRegistration"
-              accept="image/*,.pdf"
+              accept=".jpg,.png,.pdf"
               onChange={handleStateRegistration}
               className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
             />
@@ -806,7 +809,7 @@ return (
             type="file"
             id="questionnaire"
             name="questionnaire"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handleQuestionnaire}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -817,7 +820,7 @@ return (
             type="file"
             id="landDeed"
             name="landDeed"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handleLandDeed}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -828,7 +831,7 @@ return (
             type="file"
             id="urbanPlanning"
             name="urbanPlanning"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handleUrbanPlanning}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -839,7 +842,7 @@ return (
             type="file"
             id="permission"
             name="permission"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handlePermission}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -850,7 +853,7 @@ return (
             type="file"
             id="dogGeneral"
             name="dogGeneral"
-            accept="image/*,.pdf"
+            accept=".jpg,.png,.pdf"
             onChange={handleDogGeneral}
             className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
           />
@@ -951,16 +954,18 @@ return (
     </Modal>
    
       <div className="flex justify-end tm-4">
+      {isLoading?<Loader />:
         <button
           type="submit"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         >
         Надіслати
         </button>
+        }
       </div>
 
-      {visibleRez?<div className='font-sm text-gren-500 text-center'>{mesRez}</div>:<></>}
-
+      
+      </>}
 
 
   </form>

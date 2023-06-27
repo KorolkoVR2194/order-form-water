@@ -5,7 +5,7 @@ import Modal from 'react-modal';
 import ReCAPTCHA from "react-google-recaptcha";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
+import Loader from '../component/Loader'
 
 const validationSchema = Yup.object({
     name: Yup.string()
@@ -42,7 +42,7 @@ const NumberRegistered = () =>{
         },
         validationSchema,
         onSubmit: (values) => {
-     
+          setIsLoading(true);
           const formData = new FormData();
     
           formData.append('name', formik.values.name);
@@ -62,7 +62,7 @@ const NumberRegistered = () =>{
     
             if (response.data.success===1){
               setVisibleRez(true);
-              setMesRez('Заявка відправлена успішно.');
+              setMesRez('Заявка відправлена успішно. На електрону адресу відправлено посилання для перегляду статусу заявки.');
             } else {
               setVisibleRez(true);
               setMesRez('Виникла помилка при відправлені заявки. Спробуйте пізніше. Або зверніться за тел. 78-75-60');
@@ -75,7 +75,7 @@ const NumberRegistered = () =>{
             setVisibleRez(true);
             setMesRez('Виникла помилка при відправлені заявки. Спробуйте пізніше. Або зверніться за тел. 78-75-60');
           });
-    
+          setIsLoading(false); 
         },
       });
 
@@ -88,7 +88,7 @@ const NumberRegistered = () =>{
       const [visibleRez, setVisibleRez] = useState(false);
       const [mesRez, setMesRez] = useState('');
       const [modalIsPersonal, setModalIsPersonal] = useState(false);
-
+      const [isLoading, setIsLoading] = useState(false);
     
       Modal.setAppElement("#root");
     
@@ -134,6 +134,8 @@ const NumberRegistered = () =>{
  return (<>
  <form onSubmit={formik.handleSubmit} className="max-w-lg mx-auto my-4 p-4 bg-white shadow-lg rounded" encType="multipart/form-data">
       <h3 className="text-xl font-semibold mb-2 text-center">Заявка на зміну кількості прописаних осіб</h3>
+
+      {visibleRez?<div className='font-sm text-gren-500 text-center'>{mesRez}</div>:<>
       <div className='mb-4 text-center text-sm'>Для того, щоб замовити послугу, заповніть, будь ласка, онлайн-заявку</div>
 
       <div className="mb-4">
@@ -220,7 +222,8 @@ const NumberRegistered = () =>{
          <div className='text-sm'>{formik.errors.comments}</div>)}
       </div>
 
-
+      <div className='font-semibold'>Перелік необхідних документів:</div>
+      <div className='font-sm text-blue-500'>Розмір файлу не має перевищувати (15 МБ):</div>
 
             
       <div className="mb-2">
@@ -229,7 +232,7 @@ const NumberRegistered = () =>{
               type="file"
               id="familyMembers"
               name="familyMembers"
-              accept="image/*,.pdf"
+              accept=".jpg,.png,.pdf"
               onChange={handleFamilyMembers}
              className="appearance-none bg-transparent border-none text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
             />
@@ -283,14 +286,16 @@ const NumberRegistered = () =>{
     </Modal>
 
     <div className="flex justify-end tm-4">
+         {isLoading?<Loader />:
         <button
           type="submit"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         >
         Надіслати
         </button>
+        }
       </div>
-      {visibleRez?<div className='font-sm text-gren-500 text-center'>{mesRez}</div>:<></>}
+      </>}
     </form>
 
 

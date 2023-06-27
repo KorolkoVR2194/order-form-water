@@ -9,6 +9,8 @@ import WorksTransport from './forms/WorksTransport';
 import NoPage from './forms/NoPage';
 import NumberRegistered from './forms/NumberRegistered'
 import ChangeOwner from './forms/ChangeOwner';
+import Status from './forms/Status'
+import MessageVKO from './forms/MessageVKO'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -24,6 +26,9 @@ root.render(
           <Route path="verificationcounter" element={<VerificationCounter />} />
           <Route path="workstransport" element={<WorksTransport />} />
           <Route path="changeowner" element={<ChangeOwner />} />
+          <Route path="messagevko" element={<MessageVKO />} />
+
+          <Route path="status" element={<Status />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>
